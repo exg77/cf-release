@@ -2,30 +2,41 @@
 
 ## Minimum requirements
 
-The smallest laptop this worked on was running with at 8GB of ram. We recommend using 16GB or more for a much better reliability and performance.
+The machine this worked on was running with 8GB of ram. We recommend using 16GB or more for a much better reliability and performance.
 
-### Target the bosh-lite director
+## Prepare and target the bosh lite director
 
 Make sure you have successfully installed and started the bosh-lite vm. This guide will assume default settings and setup recommended at:
 https://github.com/cloudfoundry/bosh-lite/blob/master/README.md
 
-```
-bosh target 192.168.50.4 lite
-```
+A Bosh lite director must be available and targeted by the `bosh` command line executable.
 
-### Clone the cf-release repository
-```
-git clone https://github.com/cloudfoundry/cf-release/
-cd cf-release
-```
+##Quick start for a demo of CF
 
-### create and upload the release to the bosh-lite director
-
-if you'd like to deploy the currently checked out git commit 
+Assuming the above bosh director preparation and current directory to be a checkout of `cloudfoundry/cf-release` repo.
 
 ```
-  bosh -t lite create release
-  bosh -t lite upload release
+./bosh-lite/provision_latest_stable.sh
+```
+
+##Step by step deploy to make and test dev releases
+
+### Upload a cf-compatible bosh-lite stemcell
+
+Bosh team provides warden stemcells for use with bosh lite.
+
+```
+curl -L https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent -o latest-bosh-lite-stemcell.tgz
+bosh upload stemcell latest-bosh-lite-stemcell.tgz
+```
+
+### Create and upload a cf release to the bosh-lite director
+
+If you'd like to deploy the currently checked out git commit 
+
+```
+  bosh create release
+  bosh upload release
 ```
 
 ### Prepare a deployment manifest using a provided script
@@ -36,10 +47,10 @@ if you'd like to deploy the currently checked out git commit
 
 ### Deploy using a generated manifest
 
-The generated manifest instructs the director to deploy the 'latest' uploaded cf release.
+CF Runtime team uses a manifest generator to test CloudFoundry with basic default settings.
 
 ```
-bosh -t lite -d ./bosh-lite/manifests/cf-manifest.yml deploy
+bosh -d ./bosh-lite/manifests/cf-manifest.yml deploy
 ```
 
 ### Confirm your cf is running and is able to deploy apps
@@ -78,5 +89,5 @@ cf push test_app
 Test 3
 
 ```
-bosh -t lite run errand acceptance_tests
+bosh run errand acceptance_tests
 ```
