@@ -11,7 +11,7 @@ https://github.com/cloudfoundry/bosh-lite/blob/master/README.md
 
 A Bosh lite director must be available and targeted by the `bosh` command line executable.
 
-##Quick start for a demo of CF
+#Quick start for a demo of CF
 
 Assuming the above bosh director preparation and current directory to be a checkout of `cloudfoundry/cf-release` repo.
 
@@ -19,7 +19,7 @@ Assuming the above bosh director preparation and current directory to be a check
 ./bosh-lite/provision_latest_stable.sh
 ```
 
-##Step by step deploy to make and test dev releases
+#Step by step deploy to make and test dev releases
 
 ### Upload a cf-compatible bosh-lite stemcell
 
@@ -56,20 +56,19 @@ bosh -d ./bosh-lite/manifests/cf-manifest.yml deploy
 ### Confirm your cf is running and is able to deploy apps
 
 There are 4 checks that confirm your CF is running correctly
+
 1. /v2/info API endpoint responds
 1. One simple app pushes successfully. This way you can also explore CF via this app (make requests, tail logs, etc)
-1. Run smoke tests suite included as a bosh errand to make sure an app can go through a full lifecycle
 1. An acceptance test suite included as a bosh errand completes successfully
 
-
-Test 1
+##### /v2/info
 Validate API endpoint is available
 
 ```
 curl api.10.244.0.34.xip.io/v2/info
 ```
 
-Test 2
+##### Simple app push
 Use cf cli(available at https://github.com/cloudfoundry/cli) to push one of simple apps available in `src/acceptance-tests/assets`. This 
 
 ```
@@ -86,8 +85,9 @@ cf push test_app
 #Observe deployment for any errors or warnings
 ```
 
-Test 3
+##### Acceptance tests
 
+This suite provides a good check that the CF deployment is operational.
 ```
 bosh run errand acceptance_tests
 ```
